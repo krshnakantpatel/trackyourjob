@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
-import { addUser, removeUser, setWaitTime, setAttemptsLeft, decrementAttempts } from "../features/AuthSlice";
+import { addUser, removeUser, setWaitTime, setAttemptsLeft } from "../features/AuthSlice";
 import api from "../utils/AxiosInstance";
 
 const useAuth = () => {
@@ -15,6 +15,15 @@ const useAuth = () => {
 
     const [remainingAttempts, setRemainingAttempts] = useState(null);
     const [lockoutSeconds, setLockoutSeconds] = useState(0);
+
+    const SESSION_DURATION = 24 * 60 * 60 * 1000;
+
+    const setSessionExpiry = () => {
+        localStorage.setItem(
+            "authExpiresAt",
+            String(Date.now() + SESSION_DURATION)
+        );
+    };
 
     // Timer effect for rate limiting countdown
     useEffect(() => {
@@ -45,6 +54,34 @@ const useAuth = () => {
 
         return () => clearInterval(interval);
     }, []);
+
+    useEffect(() => {
+        const checkSessionExpiry = () => {
+            const expiresAt = localStorage.getItem("authExpiresAt");
+
+            if (!expiresAt) return;
+
+            const remainingTime = Number(expiresAt) - Date.now();
+
+            if (remainingTime <= 0) {
+                dispatch(removeUser());
+                localStorage.removeItem("authExpiresAt");
+                navigate("/login");
+                return;
+            }
+
+            const timer = setTimeout(() => {
+                dispatch(removeUser());
+                localStorage.removeItem("authExpiresAt");
+                toast.info("Your session has expired. Please login again.");
+                navigate("/login");
+            }, remainingTime);
+
+            return () => clearTimeout(timer);
+        };
+
+        return checkSessionExpiry();
+    }, [dispatch, navigate]);
 
     const processAuthHeadersOrError = (error) => {
         if (!error) return;
@@ -88,6 +125,7 @@ const useAuth = () => {
         onSuccess: (response) => {
             const { user, token, message } = response.data;
             dispatch(addUser({ user, token }));
+            setSessionExpiry();
             toast.success(message || "User logged in successfully");
             setRemainingAttempts(null);
             localStorage.removeItem("authLockoutUntil");
@@ -116,6 +154,7 @@ const useAuth = () => {
         onSuccess: (response) => {
             const { user, token, message } = response.data;
             dispatch(addUser({ user, token }));
+            setSessionExpiry();
             toast.success(message || "User registered successfully");
             setRemainingAttempts(null);
             localStorage.removeItem("authLockoutUntil");
@@ -143,6 +182,8 @@ const useAuth = () => {
 
     const logoutUser = () => {
         dispatch(removeUser());
+        localStorage.removeItem("authExpiresAt");
+
         toast.info("Logged out successfully");
         navigate("/login");
     };
@@ -160,7 +201,6 @@ const useAuth = () => {
         loginMutation,
         registerMutation,
         registerForm,
-        registerMutation,
         loginForm,
         logoutUser,
         remainingAttempts,
@@ -173,4 +213,4 @@ export {
     useAuth
 };
 
-
+
