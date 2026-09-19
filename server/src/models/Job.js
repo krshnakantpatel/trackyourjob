@@ -29,6 +29,28 @@ const jobSchema = new mongoose.Schema({
         trim: true
     },
 
+    jobType: {
+        type: String,
+        enum: [
+            "Full-time",
+            "Part-time",
+            "Contract",
+            "Internship",
+            "Freelance"
+        ],
+        required: true
+    },
+
+    workplaceType: {
+        type: String,
+        enum: [
+            "On-site",
+            "Hybrid",
+            "Remote"
+        ],
+        required: true
+    },
+
     jobDescription: {
         type: String,
         trim: true
@@ -53,8 +75,8 @@ const jobSchema = new mongoose.Schema({
 
     interviews: [
         {
-            type : mongoose.Schema.Types.ObjectId,
-            ref : "Interview",
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Interview",
         }
     ]
 }, {

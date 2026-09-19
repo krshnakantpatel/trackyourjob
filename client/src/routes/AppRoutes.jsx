@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../features/AuthSlice";
 import PublicProtected from "./protected/PublicProtected";
 import MainProtected from "./protected/MainProtected";
+import AddJob from "../pages/AddJob";
 
 const AppRoutes = () => {
 
@@ -73,6 +74,10 @@ const AppRoutes = () => {
             ]
         },
         {
+            path : "/add-job",
+            element : <AddJob />
+        },
+        {
             path: "*",
             element: <Navigate to="/" replace />
         }
@@ -81,4 +86,4 @@ const AppRoutes = () => {
     return <RouterProvider router={router} />;
 }
 
-export default AppRoutes;
+export default AppRoutes;

@@ -28,3 +28,5 @@ const interviewSchema = new mongoose.Schema({
 });
 
 const Interview = mongoose.Model( "Interview" , interviewSchema);
+
+export default Interview;

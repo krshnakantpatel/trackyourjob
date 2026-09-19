@@ -5,7 +5,7 @@ const generateToken = (userId) => {
     return jwt.sign(
         { userId },
         process.env.JWT_SECRET || "default_jwt_secret",
-        { expiresIn: "3d" }
+        { expiresIn: "1d" }
     );
 };
 
@@ -122,4 +122,4 @@ export const getMe = async (req, res) => {
             error: error.message
         });
     }
-};
+};
