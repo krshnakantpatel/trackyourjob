@@ -10,6 +10,7 @@ import { addUser } from "../features/AuthSlice";
 import PublicProtected from "./protected/PublicProtected";
 import MainProtected from "./protected/MainProtected";
 import AddJob from "../pages/AddJob";
+import Applications from "../pages/Applications";
 
 const AppRoutes = () => {
 
@@ -76,6 +77,16 @@ const AppRoutes = () => {
         {
             path : "/add-job",
             element : <AddJob />
+        },
+        {
+            path : "/applications",
+            element : <Applications />,
+            // children : [
+            //     {
+            //         path : "/:id",
+            //         element : <Jobapplication />
+            //     }
+            // ]
         },
         {
             path: "*",

@@ -2,38 +2,41 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../utils/AxiosInstance";
 import { useSelector } from "react-redux";
-import { useAuth }  from "../hooks/authHooks";
+import { useAuth } from "../hooks/authHooks";
 
 const Home = () => {
-    const {navigate} = useAuth();
+    const { navigate } = useAuth();
     const { user } = useSelector((state) => state.auth);
+
     const [filter, setFilter] = useState("All");
 
     const {
-      data,
-      isLoading,
-      isError,
-  } = useQuery({
-      queryKey: ["jobs"],
-      queryFn: async () => {
-          const response = await axiosInstance.get("/jobs");
-          return response.data.jobs;
-      },
-  });
+        data,
+        isLoading,
+        isError,
+    } = useQuery({
+        queryKey: ["jobs"],
+        queryFn: async () => {
+            const response = await axiosInstance.get("/jobs");
+            return response.data.jobs;
+        },
+    });
 
-    const applications = data || [];
+    const allApplications = data || [];
 
-    const totalApps = applications.length;
+    const applications = allApplications.slice(0, 10);
 
-    const interviewCount = applications.filter(
+    const totalApps = allApplications.length;
+
+    const interviewCount = allApplications.filter(
         (app) => app.status === "Interview"
     ).length;
 
-    const offerCount = applications.filter(
+    const offerCount = allApplications.filter(
         (app) => app.status === "Offer"
     ).length;
 
-    const rejectedCount = applications.filter(
+    const rejectedCount = allApplications.filter(
         (app) => app.status === "Rejected"
     ).length;
 
@@ -41,6 +44,140 @@ const Home = () => {
         filter === "All"
             ? applications
             : applications.filter((app) => app.status === filter);
+
+    // ================= LOADING STATE =================
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-slate-50 text-slate-900">
+
+                {/* Loading Hero */}
+                <section className="border-b border-slate-200 bg-white">
+                    <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+                        <div className="max-w-3xl animate-pulse">
+                            <div className="h-4 w-32 rounded bg-slate-200" />
+
+                            <div className="mt-5 h-12 w-3/4 rounded-lg bg-slate-200" />
+
+                            <div className="mt-3 h-12 w-1/2 rounded-lg bg-slate-200" />
+
+                            <div className="mt-6 h-5 w-full max-w-2xl rounded bg-slate-200" />
+                            <div className="mt-2 h-5 w-2/3 max-w-2xl rounded bg-slate-200" />
+
+                            <div className="mt-8 h-11 w-40 rounded-xl bg-slate-200" />
+                        </div>
+                    </div>
+                </section>
+
+                {/* Loading Dashboard */}
+                <main className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
+
+                    <div className="animate-pulse">
+                        <div className="h-7 w-40 rounded bg-slate-200" />
+                        <div className="mt-2 h-4 w-64 rounded bg-slate-200" />
+                    </div>
+
+                    {/* Stats Skeleton */}
+                    <div className="mt-7 grid grid-cols-2 gap-4 lg:grid-cols-4">
+
+                        {[1, 2, 3, 4].map((item) => (
+                            <div
+                                key={item}
+                                className="animate-pulse rounded-2xl border border-slate-200 bg-white p-5"
+                            >
+                                <div className="flex items-start justify-between">
+                                    <div>
+                                        <div className="h-4 w-32 rounded bg-slate-200" />
+                                        <div className="mt-4 h-9 w-12 rounded bg-slate-200" />
+                                    </div>
+
+                                    <div className="h-10 w-10 rounded-xl bg-slate-200" />
+                                </div>
+
+                                <div className="mt-4 h-3 w-40 rounded bg-slate-200" />
+                            </div>
+                        ))}
+
+                    </div>
+
+                    {/* Applications Skeleton */}
+                    <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+
+                        <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+                            <div className="animate-pulse">
+                                <div className="h-5 w-36 rounded bg-slate-200" />
+                                <div className="mt-2 h-3 w-24 rounded bg-slate-200" />
+                            </div>
+
+                            <div className="h-8 w-48 animate-pulse rounded-lg bg-slate-200" />
+                        </div>
+
+                        <div className="divide-y divide-slate-100">
+                            {[1, 2, 3].map((item) => (
+                                <div
+                                    key={item}
+                                    className="flex items-center gap-4 px-6 py-5"
+                                >
+                                    <div className="h-11 w-11 animate-pulse rounded-xl bg-slate-200" />
+
+                                    <div className="flex-1 animate-pulse">
+                                        <div className="h-4 w-56 rounded bg-slate-200" />
+                                        <div className="mt-2 h-3 w-72 rounded bg-slate-200" />
+                                        <div className="mt-2 h-3 w-32 rounded bg-slate-200" />
+                                    </div>
+
+                                    <div className="h-7 w-20 animate-pulse rounded-full bg-slate-200" />
+                                    <div className="h-5 w-5 animate-pulse rounded bg-slate-200" />
+                                </div>
+                            ))}
+                        </div>
+
+                    </div>
+
+                </main>
+            </div>
+        );
+    }
+
+    // ================= ERROR STATE =================
+
+    if (isError) {
+        return (
+            <div className="min-h-screen bg-slate-50 text-slate-900">
+
+                <section className="border-b border-slate-200 bg-white">
+                    <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+
+                        <div className="max-w-2xl">
+
+                            <p className="mb-4 text-sm font-semibold text-red-600">
+                                Something went wrong
+                            </p>
+
+                            <h1 className="text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl">
+                                We couldn't load your applications.
+                            </h1>
+
+                            <p className="mt-5 text-base leading-7 text-slate-600 sm:text-lg">
+                                There was a problem while fetching your job
+                                applications. Please try again.
+                            </p>
+
+                            <button
+                                onClick={() => window.location.reload()}
+                                className="mt-8 inline-flex items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                            >
+                                Try again
+                            </button>
+
+                        </div>
+
+                    </div>
+                </section>
+
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -70,7 +207,7 @@ const Home = () => {
 
                         <button
                             onClick={() => navigate("/add-job")}
-                            className="mt-8 inline-flex items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
+                            className="mt-8 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-slate-950 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-800"
                         >
                             <svg
                                 className="h-5 w-5"
@@ -114,8 +251,10 @@ const Home = () => {
                 <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
 
                     {/* Total Applications */}
+
                     <div className="group rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:border-slate-300 hover:shadow-sm">
                         <div className="flex items-start justify-between">
+
                             <div>
                                 <p className="text-sm font-medium text-slate-500">
                                     Total applications
@@ -141,6 +280,7 @@ const Home = () => {
                                     />
                                 </svg>
                             </div>
+
                         </div>
 
                         <p className="mt-3 text-xs text-slate-400">
@@ -150,8 +290,10 @@ const Home = () => {
 
 
                     {/* Interviews */}
+
                     <div className="group rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:border-violet-200 hover:shadow-sm">
                         <div className="flex items-start justify-between">
+
                             <div>
                                 <p className="text-sm font-medium text-slate-500">
                                     Interviews
@@ -177,6 +319,7 @@ const Home = () => {
                                     />
                                 </svg>
                             </div>
+
                         </div>
 
                         <p className="mt-3 text-xs text-slate-400">
@@ -186,8 +329,10 @@ const Home = () => {
 
 
                     {/* Offers */}
+
                     <div className="group rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:border-emerald-200 hover:shadow-sm">
                         <div className="flex items-start justify-between">
+
                             <div>
                                 <p className="text-sm font-medium text-slate-500">
                                     Offers
@@ -213,6 +358,7 @@ const Home = () => {
                                     />
                                 </svg>
                             </div>
+
                         </div>
 
                         <p className="mt-3 text-xs text-slate-400">
@@ -222,8 +368,10 @@ const Home = () => {
 
 
                     {/* Rejected */}
+
                     <div className="group rounded-2xl border border-slate-200 bg-white p-5 transition-all hover:border-red-200 hover:shadow-sm">
                         <div className="flex items-start justify-between">
+
                             <div>
                                 <p className="text-sm font-medium text-slate-500">
                                     Rejected
@@ -249,6 +397,7 @@ const Home = () => {
                                     />
                                 </svg>
                             </div>
+
                         </div>
 
                         <p className="mt-3 text-xs text-slate-400">
@@ -262,244 +411,263 @@ const Home = () => {
 
                 <div className="mt-8 overflow-hidden rounded-2xl border border-slate-200 bg-white">
 
-                  {/* ================= HEADER ================= */}
+                    {/* Header */}
 
-                  <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
+                    <div className="flex items-center justify-between border-b border-slate-100 px-6 py-5">
 
-                      <div>
-                          <h3 className="font-semibold text-slate-950">
-                              {filter === "All"
-                                  ? "Your applications"
-                                  : `${filter} applications`}
-                          </h3>
+                        <div>
+                            <h2 className="text-lg font-semibold text-slate-950">
+                                Recent applications
+                            </h2>
+                        </div>
 
-                          <p className="mt-1 text-xs text-slate-500">
-                              {filteredApps.length}{" "}
-                              {filteredApps.length === 1
-                                  ? "application"
-                                  : "applications"}
-                          </p>
-                      </div>
+                        {/* Filters */}
 
-                      {/* Filters */}
+                        {applications.length > 0 && (
+                            <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1">
 
-                      {applications.length > 0 && (
-                          <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1">
+                                {["All", "Interview", "Offer", "Rejected"].map(
+                                    (item) => (
+                                        <button
+                                            key={item}
+                                            onClick={() => setFilter(item)}
+                                            className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
+                                                filter === item
+                                                    ? "bg-white text-slate-900 shadow-sm"
+                                                    : "text-slate-500 hover:text-slate-900"
+                                            }`}
+                                        >
+                                            {item}
+                                        </button>
+                                    )
+                                )}
 
-                              {["All", "Interview", "Offer", "Rejected"].map((item) => (
-                                  <button
-                                      key={item}
-                                      onClick={() => setFilter(item)}
-                                      className={`rounded-md px-3 py-1.5 text-xs font-medium transition ${
-                                          filter === item
-                                              ? "bg-white text-slate-900 shadow-sm"
-                                              : "text-slate-500 hover:text-slate-900"
-                                      }`}
-                                  >
-                                      {item}
-                                  </button>
-                              ))}
+                            </div>
+                        )}
 
-                          </div>
-                      )}
-
-                  </div>
+                    </div>
 
 
-                  {/* ================= APPLICATION LIST ================= */}
+                    {/* ================= APPLICATION LIST ================= */}
 
-                  {filteredApps.length > 0 && (
-                      <div className="divide-y divide-slate-100">
+                    {filteredApps.length > 0 && (
+                        <div className="divide-y divide-slate-100">
 
-                          {filteredApps.map((job) => (
-                              <button
-                                  key={job._id}
-                                  onClick={() => navigate(`/jobs/${job._id}`)}
-                                  className="group cursor-pointer flex w-full items-center gap-4 px-6 py-5 text-left transition hover:bg-slate-50"
-                              >
-                                  {/* Company Avatar */}
+                            {filteredApps.map((job) => (
+                                <button
+                                    key={job._id}
+                                    onClick={() => navigate(`/jobs/${job._id}`)}
+                                    className="group flex w-full cursor-pointer items-center gap-4 px-6 py-5 text-left transition hover:bg-slate-50"
+                                >
 
-                                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-bold text-slate-700">
-                                      {job.company?.charAt(0)?.toUpperCase()}
-                                  </div>
+                                    {/* Company Avatar */}
 
-
-                                  {/* Job Information */}
-
-                                  <div className="min-w-0 flex-1">
-
-                                      <div className="flex items-center gap-2">
-
-                                          <h4 className="truncate text-sm font-semibold text-slate-950">
-                                              {job.jobTitle}
-                                          </h4>
-
-                                          <span className="hidden text-slate-300 sm:block">
-                                              •
-                                          </span>
-
-                                          <span className="hidden truncate text-sm text-slate-500 sm:block">
-                                              {job.company}
-                                          </span>
-
-                                      </div>
+                                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-bold text-slate-700">
+                                        {job.company?.charAt(0)?.toUpperCase()}
+                                    </div>
 
 
-                                      <div className="mt-1.5 flex flex-wrap items-center gap-x-2 text-xs text-slate-500">
+                                    {/* Job Information */}
 
-                                          {job.location && (
-                                              <>
-                                                  <span>{job.location}</span>
-                                                  <span className="text-slate-300">
-                                                      •
-                                                  </span>
-                                              </>
-                                          )}
+                                    <div className="min-w-0 flex-1">
 
-                                          <span>{job.jobType}</span>
+                                        <div className="flex items-center gap-2">
 
-                                          <span className="text-slate-300">
-                                              •
-                                          </span>
+                                            <h4 className="truncate text-sm font-semibold text-slate-950">
+                                                {job.jobTitle}
+                                            </h4>
 
-                                          <span>{job.workplaceType}</span>
+                                            <span className="hidden text-slate-300 sm:block">
+                                                •
+                                            </span>
 
-                                      </div>
+                                            <span className="hidden truncate text-sm text-slate-500 sm:block">
+                                                {job.company}
+                                            </span>
 
-
-                                      <p className="mt-1.5 text-xs text-slate-400">
-                                          Applied{" "}
-                                          {job.appliedDate
-                                              ? new Date(
-                                                    job.appliedDate
-                                                ).toLocaleDateString("en-IN", {
-                                                    day: "2-digit",
-                                                    month: "short",
-                                                    year: "numeric",
-                                                })
-                                              : "—"}
-                                      </p>
-
-                                  </div>
+                                        </div>
 
 
-                                  {/* Status */}
+                                        <div className="mt-1.5 flex flex-wrap items-center gap-x-2 text-xs text-slate-500">
 
-                                  <div className="shrink-0">
+                                            {job.location && (
+                                                <>
+                                                    <span>{job.location}</span>
 
-                                      <span
-                                          className={`inline-flex rounded-full px-3 py-1.5 text-xs font-semibold ${
-                                              job.status === "Applied"
-                                                  ? "bg-blue-50 text-blue-700"
-                                                  : job.status === "Interview"
-                                                  ? "bg-violet-50 text-violet-700"
-                                                  : job.status === "Offer"
-                                                  ? "bg-emerald-50 text-emerald-700"
-                                                  : job.status === "Rejected"
-                                                  ? "bg-red-50 text-red-700"
-                                                  : "bg-slate-100 text-slate-600"
-                                          }`}
-                                      >
-                                          {job.status}
-                                      </span>
+                                                    <span className="text-slate-300">
+                                                        •
+                                                    </span>
+                                                </>
+                                            )}
 
-                                  </div>
+                                            <span>{job.jobType}</span>
 
+                                            <span className="text-slate-300">
+                                                •
+                                            </span>
 
-                                  {/* Arrow */}
+                                            <span>{job.workplaceType}</span>
 
-                                  <div className="shrink-0">
-
-                                      <svg
-                                          className="h-5 w-5 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-slate-600"
-                                          fill="none"
-                                          stroke="currentColor"
-                                          viewBox="0 0 24 24"
-                                      >
-                                          <path
-                                              strokeLinecap="round"
-                                              strokeLinejoin="round"
-                                              strokeWidth="1.8"
-                                              d="M9 5l7 7-7 7"
-                                          />
-                                      </svg>
-
-                                  </div>
-
-                              </button>
-                          ))}
-
-                      </div>
-                  )}
+                                        </div>
 
 
-                  {/* ================= EMPTY STATE ================= */}
+                                        <p className="mt-1.5 text-xs text-slate-400">
+                                            Applied{" "}
+                                            {job.appliedDate
+                                                ? new Date(
+                                                      job.appliedDate
+                                                  ).toLocaleDateString(
+                                                      "en-IN",
+                                                      {
+                                                          day: "2-digit",
+                                                          month: "short",
+                                                          year: "numeric",
+                                                      }
+                                                  )
+                                                : "—"}
+                                        </p>
 
-                  {filteredApps.length === 0 && (
-                      <div className="px-6 py-20 text-center">
-
-                          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
-
-                              <svg
-                                  className="h-8 w-8"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                              >
-                                  <path
-                                      strokeLinecap="round"
-                                      strokeLinejoin="round"
-                                      strokeWidth="1.8"
-                                      d="M20 7l-8 5-8-5m16 0a2 2 0 00-2-2H6a2 2 0 00-2 2m16 0v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7"
-                                  />
-                              </svg>
-
-                          </div>
+                                    </div>
 
 
-                          <h3 className="mt-5 text-lg font-semibold text-slate-950">
-                              {filter === "All"
-                                  ? "No applications yet"
-                                  : `No ${filter.toLowerCase()} applications`}
-                          </h3>
+                                    {/* Status */}
+
+                                    <div className="shrink-0">
+
+                                        <span
+                                            className={`inline-flex rounded-full px-3 py-1.5 text-xs font-semibold ${
+                                                job.status === "Applied"
+                                                    ? "bg-blue-50 text-blue-700"
+                                                    : job.status === "Interview"
+                                                    ? "bg-violet-50 text-violet-700"
+                                                    : job.status === "Offer"
+                                                    ? "bg-emerald-50 text-emerald-700"
+                                                    : job.status === "Rejected"
+                                                    ? "bg-red-50 text-red-700"
+                                                    : "bg-slate-100 text-slate-600"
+                                            }`}
+                                        >
+                                            {job.status}
+                                        </span>
+
+                                    </div>
 
 
-                          <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
-                              {filter === "All"
-                                  ? "Start tracking your job search by adding your first application."
-                                  : `You don't have any ${filter.toLowerCase()} applications yet.`}
-                          </p>
+                                    {/* Arrow */}
+
+                                    <div className="shrink-0">
+
+                                        <svg
+                                            className="h-5 w-5 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-slate-600"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="1.8"
+                                                d="M9 5l7 7-7 7"
+                                            />
+                                        </svg>
+
+                                    </div>
+
+                                </button>
+                            ))}
+
+                            <button
+                                onClick={() => navigate("/applications")}
+                                className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-b-2xl bg-slate-50 px-6 py-3 text-md font-semibold text-slate-900 transition hover:bg-slate-100"
+                            >
+                                View all applications
+
+                                <svg
+                                    className="h-4 w-4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M9 5l7 7-7 7"
+                                    />
+                                </svg>
+
+                            </button>
+
+                        </div>
+                    )}
+
+                    {/* ================= EMPTY STATE ================= */}
+
+                    {filteredApps.length === 0 && (
+                        <div className="px-6 py-20 text-center">
+
+                            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-blue-600">
+
+                                <svg
+                                    className="h-8 w-8"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="1.8"
+                                        d="M20 7l-8 5-8-5m16 0a2 2 0 00-2-2H6a2 2 0 00-2 2m16 0v10a2 2 0 01-2 2H6a2 2 0 01-2-2V7"
+                                    />
+                                </svg>
+
+                            </div>
 
 
-                          {filter === "All" && (
-                              <button
-                                  onClick={() => navigate("/add-job")}
-                                  className="mt-6 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
-                              >
+                            <h3 className="mt-5 text-lg font-semibold text-slate-950">
+                                {filter === "All"
+                                    ? "No applications yet"
+                                    : `No ${filter.toLowerCase()} applications`}
+                            </h3>
 
-                                  <svg
-                                      className="h-4 w-4"
-                                      fill="none"
-                                      stroke="currentColor"
-                                      viewBox="0 0 24 24"
-                                  >
-                                      <path
-                                          strokeLinecap="round"
-                                          strokeLinejoin="round"
-                                          strokeWidth="2"
-                                          d="M12 4v16m8-8H4"
-                                      />
-                                  </svg>
 
-                                  Add your first application
+                            <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
+                                {filter === "All"
+                                    ? "Start tracking your job search by adding your first application."
+                                    : `You don't have any ${filter.toLowerCase()} applications yet.`}
+                            </p>
 
-                              </button>
-                          )}
 
-                      </div>
-                  )}
+                            {filter === "All" && (
+                                <button
+                                    onClick={() => navigate("/add-job")}
+                                    className="mt-6 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+                                >
 
-              </div>
+                                    <svg
+                                        className="h-4 w-4"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M12 4v16m8-8H4"
+                                        />
+                                    </svg>
+
+                                    Add your first application
+
+                                </button>
+                            )}
+
+                        </div>
+                    )}
+
+                </div>
 
             </main>
 
