@@ -223,7 +223,7 @@ const AddJob = () => {
                     <button
                         type="submit"
                         disabled={addJobMutation.isPending}
-                        className="w-full bg-black text-white py-3 rounded-lg font-medium disabled:opacity-50"
+                        className="w-full cursor-pointer bg-black text-white py-3 rounded-lg font-medium disabled:opacity-50"
                     >
                         {addJobMutation.isPending
                             ? "Adding Job..."
