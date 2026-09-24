@@ -350,7 +350,7 @@ const Applications = () => {
                         {filteredJobs.map((job) => (
                             <button
                                 key={job._id}
-                                onClick={() => navigate(`/applications/${job._id}`)}
+                                onClick={() => navigate(`/jobs/${job._id}`)}
                                 className="group flex w-full items-center gap-4 border-b border-slate-100 px-5 py-5 text-left transition last:border-b-0 hover:bg-slate-50 sm:px-6"
                             >
                                 {/* Company avatar */}
