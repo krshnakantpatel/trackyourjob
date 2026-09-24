@@ -14,7 +14,7 @@ const interviewSchema = new mongoose.Schema({
 
     type: {
         type: String,
-        enum: ["Initial Screen", "Technical", "Work Culture", "Panel", "Other"]
+        enum: ["Initial screen", "Technical", "Work culture", "Panel", "Other"]
     },
 
     format: {
@@ -27,6 +27,6 @@ const interviewSchema = new mongoose.Schema({
     notes: String
 });
 
-const Interview = mongoose.Model( "Interview" , interviewSchema);
+const Interview = mongoose.model( "Interview" , interviewSchema);
 
 export default Interview;
