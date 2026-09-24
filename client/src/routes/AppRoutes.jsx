@@ -11,6 +11,7 @@ import PublicProtected from "./protected/PublicProtected";
 import MainProtected from "./protected/MainProtected";
 import AddJob from "../pages/AddJob";
 import Applications from "../pages/Applications";
+import JobDetails from "../pages/JobDetails";
 
 const AppRoutes = () => {
 
@@ -81,12 +82,10 @@ const AppRoutes = () => {
         {
             path : "/applications",
             element : <Applications />,
-            // children : [
-            //     {
-            //         path : "/:id",
-            //         element : <Jobapplication />
-            //     }
-            // ]
+        },
+        {
+            path : "/applications/:id",
+            element : <JobDetails />
         },
         {
             path: "*",

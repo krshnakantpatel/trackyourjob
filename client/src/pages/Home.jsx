@@ -456,7 +456,7 @@ const Home = () => {
                             {filteredApps.map((job) => (
                                 <button
                                     key={job._id}
-                                    onClick={() => navigate(`/jobs/${job._id}`)}
+                                    onClick={() => navigate(`/applications/${job._id}`)}
                                     className="group flex w-full cursor-pointer items-center gap-4 px-6 py-5 text-left transition hover:bg-slate-50"
                                 >
 
