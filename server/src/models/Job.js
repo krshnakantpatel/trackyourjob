@@ -163,28 +163,6 @@ const jobSchema = new mongoose.Schema(
         },
 
         // =====================================================
-        // OUTCOME
-        // =====================================================
-
-        outcome: {
-            reason: {
-                type: String,
-                trim: true,
-            },
-
-            offerDetails: {
-                ctc: Number,
-
-                joiningDate: Date,
-
-                notes: {
-                    type: String,
-                    trim: true,
-                },
-            },
-        },
-
-        // =====================================================
         // INTERVIEWS
         // =====================================================
 
