@@ -371,8 +371,8 @@ const Applications = () => {
                         {filteredJobs.map((job) => (
                             <button
                                 key={job._id}
-                                onClick={() => navigate(`/applications/${job._id}`)}
-                                className="group flex w-full cursor-pointer items-center gap-4 border-b border-slate-100 px-5 py-5 text-left transition last:border-b-0 hover:bg-slate-50 sm:px-6"
+                                onClick={() => navigate(`/jobs/${job._id}`)}
+                                className="group flex w-full items-center gap-4 border-b border-slate-100 px-5 py-5 text-left transition last:border-b-0 hover:bg-slate-50 sm:px-6"
                             >
                                 {/* Company avatar */}
                                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-bold text-slate-700 transition group-hover:bg-slate-200">

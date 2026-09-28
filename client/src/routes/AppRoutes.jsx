@@ -11,9 +11,6 @@ import PublicProtected from "./protected/PublicProtected";
 import MainProtected from "./protected/MainProtected";
 import AddJob from "../pages/AddJob";
 import Applications from "../pages/Applications";
-import JobDetails from "../pages/JobDetails";
-import InterviewNotes from "../pages/InterviewNotes";
-import InterviewExperienceCard from "../pages/InterviewExperienceCard";
 
 const AppRoutes = () => {
 
@@ -100,6 +97,24 @@ const AppRoutes = () => {
                     ]
                 }
             ]
+        },
+        {
+            path : "/add-job",
+            element : <AddJob />
+        },
+        {
+            path : "/applications",
+            element : <Applications />,
+            // children : [
+            //     {
+            //         path : "/:id",
+            //         element : <Jobapplication />
+            //     }
+            // ]
+        },
+        {
+            path: "*",
+            element: <Navigate to="/" replace />
         }
     ]);
 

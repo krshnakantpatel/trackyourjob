@@ -118,6 +118,11 @@ const jobSchema = new mongoose.Schema(
                 trim: true,
             },
         },
+
+        // =====================================================
+        // INTERVIEWS
+        // =====================================================
+
         interviews: [
             {
                 type: mongoose.Schema.Types.ObjectId,

@@ -3,6 +3,7 @@ import {
     createJob,
     getJobs,
     getJobById,
+    addInterview,
     updateJobStatus,
     updateJob,
     deleteJob,
@@ -17,7 +18,11 @@ router.get("/", authMiddleware, getJobs);
 
 router.get("/:id", authMiddleware, getJobById);
 
-router.put("/:id", authMiddleware, updateJob);
+router.post("/:id/interviews", authMiddleware, addInterview);
+
+router.put("/:id", authMiddleware, updateJobStatus);
+
+router.patch("/:id/status", authMiddleware, updateJob);
 
 router.patch("/:id/status", authMiddleware, updateJobStatus);
 
