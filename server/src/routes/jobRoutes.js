@@ -6,6 +6,7 @@ import {
     addInterview,
     updateJobStatus,
     updateJob,
+    deleteJob,
 } from "../controllers/jobController.js";
 import {authMiddleware} from "../middlewares/authMiddleware.js";
 
@@ -22,5 +23,9 @@ router.post("/:id/interviews", authMiddleware, addInterview);
 router.put("/:id", authMiddleware, updateJobStatus);
 
 router.patch("/:id/status", authMiddleware, updateJob);
+
+router.patch("/:id/status", authMiddleware, updateJobStatus);
+
+router.delete("/:id", authMiddleware, deleteJob);
 
 export default router;

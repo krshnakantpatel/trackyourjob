@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../utils/AxiosInstance";
 import { useSelector } from "react-redux";
 import { useAuth } from "../hooks/authHooks";
+import ApplicationList from "../components/ApplicationList";
 
 const Home = () => {
     const { navigate } = useAuth();

@@ -5,10 +5,13 @@ import Navbar from "../components/Navbar";
 
 const MainLayout = () => {
   return (
-    <div>
-        <Navbar />
-        <Outlet/>
-        <Footer />
+    <div className="min-h-screen bg-slate-50">
+      <Navbar />
+
+      <main>
+        <Outlet />
+      </main>
+      <Footer />
     </div>
   )
 }

@@ -1,10 +1,14 @@
+import crypto from "crypto";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+
+import { generateVerificationToken } from "../utils/tokenUtils.js";
+import { sendVerificationEmail } from "../services/emailService.js";
 
 const generateToken = (userId) => {
     return jwt.sign(
         { userId },
-        process.env.JWT_SECRET || "default_jwt_secret",
+        process.env.JWT_SECRET,
         { expiresIn: "1d" }
     );
 };
@@ -12,6 +16,7 @@ const generateToken = (userId) => {
 export const register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
+        const { verificationToken, hashedToken } = generateVerificationToken();
 
         if (!name || !email || !password) {
             return res.status(400).json({
@@ -27,17 +32,28 @@ export const register = async (req, res) => {
             });
         }
 
+
+
         const user = await User.create({
             name,
             email: email.toLowerCase(),
-            password
+            password,
+            emailVerificationToken: hashedToken,
+            emailVerificationExpires: new Date(Date.now() + 24 * 60 * 60 * 1000)
+
         });
 
-        const token = generateToken(user._id);
+        await sendVerificationEmail({
+            to: user.email,
+            name: user.name,
+            verificationToken: verificationToken,
+        });
+
+        const authToken = generateToken(user._id);
 
         res.status(201).json({
             message: "User registered successfully",
-            token,
+            token: authToken,
             user: {
                 id: user._id,
                 name: user.name,
@@ -79,11 +95,11 @@ export const login = async (req, res) => {
             });
         }
 
-        const token = generateToken(user._id);
+        const authToken = generateToken(user._id);
 
         res.status(200).json({
             message: "User logged in successfully",
-            token,
+            token: authToken,
             user: {
                 id: user._id,
                 name: user.name,

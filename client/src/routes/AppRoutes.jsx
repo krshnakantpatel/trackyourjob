@@ -59,7 +59,7 @@ const AppRoutes = () => {
             ]
         },
         {
-            path: "/home",
+            path: "/",
             element: <MainProtected />,
             children: [
                 {
@@ -67,8 +67,32 @@ const AppRoutes = () => {
                     element: <MainLayout />,
                     children: [
                         {
-                            path: "",
+                            path: "/home",
                             element: <Home />
+                        },
+                         {
+                            path : "/add-job",
+                            element : <AddJob />
+                        },
+                        {
+                            path : "/applications",
+                            element : <Applications />,
+                        },
+                        {
+                            path : "/applications/:id",
+                            element : <JobDetails />
+                        },
+                        {
+                            path: "/notes",
+                            element: <InterviewNotes />,
+                        },
+                        {
+                            path: "/notes/:interviewId",
+                            element: <InterviewExperienceCard />,
+                        },
+                        {
+                            path: "*",
+                            element: <Navigate to="/" replace />
                         }
                     ]
                 }
