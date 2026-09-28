@@ -2,42 +2,29 @@ import mongoose from "mongoose";
 
 const jobSchema = new mongoose.Schema(
     {
-        // =====================================================
-        // USER
-        // =====================================================
-
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
             required: true,
         },
-
-        // =====================================================
-        // JOB INFORMATION
-        // =====================================================
-
         jobTitle: {
             type: String,
             required: true,
             trim: true,
         },
-
         company: {
             type: String,
             required: true,
             trim: true,
         },
-
         jobUrl: {
             type: String,
             trim: true,
         },
-
         location: {
             type: String,
             trim: true,
         },
-
         jobType: {
             type: String,
             enum: [
@@ -49,27 +36,19 @@ const jobSchema = new mongoose.Schema(
             ],
             required: true,
         },
-
         workplaceType: {
             type: String,
             enum: ["On-site", "Hybrid", "Remote"],
             required: true,
         },
-
         jobDescription: {
             type: String,
             trim: true,
         },
-
-        // =====================================================
-        // APPLICATION INFORMATION
-        // =====================================================
-
         appliedDate: {
             type: Date,
             default: Date.now,
         },
-
         source: {
             type: String,
             enum: [
@@ -82,13 +61,10 @@ const jobSchema = new mongoose.Schema(
             ],
             default: "Other",
         },
-
         referralContact: {
             type: String,
             trim: true,
         },
-
-        // Current stage of the application
         status: {
             type: String,
             enum: [
@@ -100,42 +76,24 @@ const jobSchema = new mongoose.Schema(
             ],
             default: "Applied",
         },
-
         priority: {
             type: String,
             enum: ["Low", "Medium", "High"],
             default: "Medium",
         },
-
-        // =====================================================
-        // FOLLOW-UP
-        // =====================================================
-
         nextFollowUpDate: {
             type: Date,
         },
-
-        // =====================================================
-        // COMPENSATION
-        // =====================================================
-
         salaryMin: {
             type: Number,
         },
-
         salaryMax: {
             type: Number,
         },
-
         salaryCurrency: {
             type: String,
             default: "INR",
         },
-
-        // =====================================================
-        // CONTACTS
-        // =====================================================
-
         recruiter: {
             name: {
                 type: String,
@@ -150,7 +108,6 @@ const jobSchema = new mongoose.Schema(
                 trim: true,
             },
         },
-
         hiringManager: {
             name: {
                 type: String,
@@ -161,11 +118,6 @@ const jobSchema = new mongoose.Schema(
                 trim: true,
             },
         },
-
-        // =====================================================
-        // INTERVIEWS
-        // =====================================================
-
         interviews: [
             {
                 type: mongoose.Schema.Types.ObjectId,

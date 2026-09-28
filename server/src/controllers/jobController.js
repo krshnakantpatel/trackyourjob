@@ -84,7 +84,7 @@ export const updateJob = async (req, res) => {
             },
             req.body,
             {
-                new: true,
+                returnDocument: 'after',
                 runValidators: true,
             }
         );
@@ -111,6 +111,35 @@ export const updateJob = async (req, res) => {
     }
 };
 
+export const deleteJob = async (req, res) => {
+    try {
+        const job = await Job.findOneAndDelete({
+            _id: req.params.id,
+            user: req.user._id,
+        });
+
+        if (!job) {
+            return res.status(404).json({
+                success: false,
+                message: "Job not found",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Job deleted successfully",
+        });
+    } catch (error) {
+        console.error("Delete job error:", error);
+
+        res.status(500).json({
+            success: false,
+            message: "Failed to delete job",
+        });
+    }
+
+};
+
 export const updateJobStatus = async (req, res) => {
     try{
         const job = await Job.findOneAndUpdate(
@@ -120,7 +149,7 @@ export const updateJobStatus = async (req, res) => {
             },
             { status: req.body.status },
             {
-                new: true,
+                returnDocument: 'after',
                 runValidators: true,
             }
         );
@@ -147,47 +176,3 @@ export const updateJobStatus = async (req, res) => {
         });
     }
 }
-
-export const addInterview = async (req, res) => {
-    try {
-        // 1. Find the job and verify that it belongs to the logged-in user
-        const job = await Job.findOne({
-            _id: req.params.id,
-            user: req.user._id,
-        });
-
-        if (!job) {
-            return res.status(404).json({
-                success: false,
-                message: "Job not found",
-            });
-        }
-
-        // 2. Create the interview as a separate document
-        const interview = await Interview.create({
-            ...req.body,
-            job: job._id,
-            user: req.user._id,
-        });
-
-        // 3. Store only the interview ID in the Job document
-        job.interviews.push(interview._id);
-
-        await job.save();
-
-        res.status(201).json({
-            success: true,
-            message: "Interview added successfully",
-            interview,
-            job,
-        });
-
-    } catch (error) {
-        console.error("Add interview error:", error);
-
-        res.status(500).json({
-            success: false,
-            message: "Failed to add interview",
-        });
-    }
-};

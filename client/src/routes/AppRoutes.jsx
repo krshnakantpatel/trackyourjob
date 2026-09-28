@@ -12,6 +12,8 @@ import MainProtected from "./protected/MainProtected";
 import AddJob from "../pages/AddJob";
 import Applications from "../pages/Applications";
 import JobDetails from "../pages/JobDetails";
+import InterviewNotes from "../pages/InterviewNotes";
+import InterviewExperienceCard from "../pages/InterviewExperienceCard";
 
 const AppRoutes = () => {
 
@@ -60,7 +62,7 @@ const AppRoutes = () => {
             ]
         },
         {
-            path: "/home",
+            path: "/",
             element: <MainProtected />,
             children: [
                 {
@@ -68,28 +70,36 @@ const AppRoutes = () => {
                     element: <MainLayout />,
                     children: [
                         {
-                            path: "",
+                            path: "/home",
                             element: <Home />
+                        },
+                         {
+                            path : "/add-job",
+                            element : <AddJob />
+                        },
+                        {
+                            path : "/applications",
+                            element : <Applications />,
+                        },
+                        {
+                            path : "/applications/:id",
+                            element : <JobDetails />
+                        },
+                        {
+                            path: "/notes",
+                            element: <InterviewNotes />,
+                        },
+                        {
+                            path: "/notes/:interviewId",
+                            element: <InterviewExperienceCard />,
+                        },
+                        {
+                            path: "*",
+                            element: <Navigate to="/" replace />
                         }
                     ]
                 }
             ]
-        },
-        {
-            path : "/add-job",
-            element : <AddJob />
-        },
-        {
-            path : "/applications",
-            element : <Applications />,
-        },
-        {
-            path : "/applications/:id",
-            element : <JobDetails />
-        },
-        {
-            path: "*",
-            element: <Navigate to="/" replace />
         }
     ]);
 
