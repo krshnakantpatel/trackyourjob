@@ -1,25 +1,35 @@
-import React from "react";
+import React , {useState} from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "../hooks/authHooks";
 import axiosInstance from "../utils/AxiosInstance";
+import Pagination from "../components/Pagination";
 
 const InterviewNotes = () => {
     const {navigate} = useAuth();
-
+    const [page, setPage] = useState(1);
     const {
         data,
         isLoading,
         isError,
+        isFetching,
     } = useQuery({
-        queryKey: ["interview-experiences"],
-        queryFn: async () => {
-            const response = await axiosInstance.get("/interviews");
+        queryKey: ["interview-experiences", page],
 
-            return response.data.interviews;
+        queryFn: async () => {
+            const response = await axiosInstance.get("/interviews", {
+                params: {
+                    page,
+                    limit: 15,
+                },
+            });
+
+            return response.data;
         },
+
+        placeholderData: (previousData) => previousData,
     });
 
-    const interviews = data || [];
+    const interviews = data?.interviews || [];
 
     const formatDate = (date) => {
         if (!date) return "Date not specified";
@@ -118,7 +128,7 @@ const InterviewNotes = () => {
                             onClick={() =>
                                 navigate(`/notes/${interview._id}`)
                             }
-                            className="group w-full rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:border-slate-300 hover:shadow-md"
+                            className="group cursor-pointer w-full rounded-2xl border border-slate-200 bg-white p-5 text-left shadow-sm transition hover:border-slate-300 hover:shadow-md"
                         >
                             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
 
@@ -200,6 +210,13 @@ const InterviewNotes = () => {
                             </div>
                         </button>
                     ))}
+                    {/* Pagination */}
+                    <Pagination
+                        page={data?.pagination?.page || 1}
+                        totalPages={data?.pagination?.totalPages || 1}
+                        onPageChange={setPage}
+                        isFetching={isFetching}
+                    />
                 </div>
             )}
         </main>
