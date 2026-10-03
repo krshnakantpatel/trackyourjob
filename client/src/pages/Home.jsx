@@ -495,7 +495,7 @@ const Home = () => {
                             {filter === "All" && (
                                 <button
                                     onClick={() => navigate("/add-job")}
-                                    className="mt-6 inline-flex items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+                                    className="mt-6 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
                                 >
 
                                     <svg

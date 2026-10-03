@@ -542,7 +542,7 @@ const Applications = () => {
                         {data.jobs.length === 0 ? (
                             <button
                                 onClick={() => navigate("/add-job")}
-                                className="mt-6 rounded-xl bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                                className="mt-6 rounded-xl cursor-pointer bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
                             >
                                 Add your first application
                             </button>
