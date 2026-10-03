@@ -177,7 +177,12 @@ const useAuth = () => {
 
     const registerForm = (data) => {
         if (lockoutSeconds > 0) return;
-        registerMutation.mutate(data);
+
+        registerMutation.mutate({
+            name: data.name,
+            email: data.email,
+            password: data.password,
+        });
     };
 
     const logoutUser = () => {

@@ -98,7 +98,7 @@ const Navbar = () => {
             className="flex items-center gap-2.5 cursor-pointer group"
           >
             <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-sm shadow-sm group-hover:bg-blue-700 transition-colors">
-              TJ
+              <img src="./trackyourjob-logo.png" alt="trackyourjob logo" />
             </div>
 
             <span className="text-lg font-bold tracking-tight text-slate-900">

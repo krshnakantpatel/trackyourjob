@@ -436,7 +436,7 @@ const AddJob = () => {
                                             priority,
                                         }))
                                     }
-                                    className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${
+                                    className={`rounded-xl cursor-pointer border px-4 py-3 text-sm font-semibold transition ${
                                         formData.priority === priority
                                             ? "border-slate-950 bg-slate-950 text-white"
                                             : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
@@ -456,7 +456,7 @@ const AddJob = () => {
                         <button
                             type="button"
                             onClick={() => navigate(-1)}
-                            className="rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                            className="rounded-xl cursor-pointer border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
                         >
                             Cancel
                         </button>
@@ -464,7 +464,7 @@ const AddJob = () => {
                         <button
                             type="submit"
                             disabled={addJobMutation.isPending}
-                            className="rounded-xl bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
+                            className="rounded-xl cursor-pointer bg-slate-950 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50"
                         >
                             {addJobMutation.isPending
                                 ? "Adding application..."
