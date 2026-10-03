@@ -80,7 +80,7 @@ const InterviewExperienceCard = () => {
 
             <button
                 onClick={() => navigate("/notes")}
-                className="text-sm font-semibold text-slate-500 hover:text-slate-950"
+                className="text-sm cursor-pointer font-semibold text-slate-500 hover:text-slate-950"
             >
                 ← Back to interview experiences
             </button>

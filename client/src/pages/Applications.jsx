@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import axiosInstance from "../utils/AxiosInstance";
+import Pagination from "../components/Pagination";
 
 const Applications = () => {
     const navigate = useNavigate();
@@ -12,20 +13,61 @@ const Applications = () => {
     const [workplaceFilter, setWorkplaceFilter] = useState("All");
     const [sortOrder, setSortOrder] = useState("newest");
 
+    const [page, setPage] = useState(1);
+
+    useEffect(() => {
+        setPage(1);
+    }, [
+        search,
+        statusFilter,
+        jobTypeFilter,
+        workplaceFilter,
+        sortOrder,
+    ]);
+
     const {
-        data: jobs = [],
+        data = { jobs: [], pagination: { page: 1, totalPages: 1 } },
         isLoading,
+        isFetching,
         isError,
     } = useQuery({
-        queryKey: ["jobs"],
+        queryKey: [
+            "jobs",
+            page,
+            search,
+            statusFilter,
+            jobTypeFilter,
+            workplaceFilter,
+            sortOrder,
+        ],
+
         queryFn: async () => {
-            const response = await axiosInstance.get("/jobs");
-            return response.data.jobs;
+            const response = await axiosInstance.get("/jobs", {
+                params: {
+                    page,
+                    limit: 15,
+                    search: search.trim(),
+                    status: statusFilter !== "All"
+                        ? statusFilter
+                        : undefined,
+                    jobType: jobTypeFilter !== "All"
+                        ? jobTypeFilter
+                        : undefined,
+                    workplaceType: workplaceFilter !== "All"
+                        ? workplaceFilter
+                        : undefined,
+                    sort: sortOrder,
+                },
+            });
+
+            return response.data;
         },
+
+        placeholderData: (previousData) => previousData,
     });
 
     const filteredJobs = useMemo(() => {
-        let result = [...jobs];
+        let result = [...data.jobs];
 
         // Search
         const searchTerm = search.trim().toLowerCase();
@@ -73,7 +115,7 @@ const Applications = () => {
 
         return result;
     }, [
-        jobs,
+        data?.jobs,
         search,
         statusFilter,
         jobTypeFilter,
@@ -347,7 +389,7 @@ const Applications = () => {
                         </h2>
 
                         <p className="mt-1 text-xs text-slate-500">
-                            Showing {filteredJobs.length} of {jobs.length} applications
+                            Showing {filteredJobs.length} of {data.jobs.length} applications
                         </p>
                     </div>
 
@@ -452,6 +494,13 @@ const Applications = () => {
                                 </svg>
                             </button>
                         ))}
+                        {/* Pagination */}
+                        <Pagination
+                            page={data.pagination.page}
+                            totalPages={data.pagination.totalPages}
+                            onPageChange={setPage}
+                            isFetching={isFetching}
+                        />
                     </div>
                 ) : (
                     /* Empty state */
@@ -479,18 +528,18 @@ const Applications = () => {
                         </div>
 
                         <h3 className="mt-4 text-base font-semibold text-slate-900">
-                            {jobs.length === 0
+                            {data.jobs.length === 0
                                 ? "No applications yet"
                                 : "No applications found"}
                         </h3>
 
                         <p className="mx-auto mt-2 max-w-sm text-sm text-slate-500">
-                            {jobs.length === 0
+                            {data.jobs.length === 0
                                 ? "Start tracking your job applications to see them here."
                                 : "Try changing your search or filters to find what you're looking for."}
                         </p>
 
-                        {jobs.length === 0 ? (
+                        {data.jobs.length === 0 ? (
                             <button
                                 onClick={() => navigate("/add-job")}
                                 className="mt-6 rounded-xl bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"

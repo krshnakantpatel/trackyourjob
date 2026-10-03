@@ -173,18 +173,43 @@ export const deleteInterview = async (req, res) => {
 
 export const getMyInterviews = async (req, res) => {
     try {
-        const interviews = await Interview.find({
+        const page = Math.max(Number(req.query.page) || 1, 1);
+
+        const limit = Math.min(
+            Math.max(Number(req.query.limit) || 15, 1),
+            50
+        );
+
+        const skip = (page - 1) * limit;
+
+        const filter = {
             user: req.user._id,
-        })
-            .populate("job", "company jobTitle")
-            .sort({
-                date: -1,
-                createdAt: -1,
-            });
+        };
+
+        const [interviews, totalInterviews] = await Promise.all([
+            Interview.find(filter)
+                .populate("job", "company jobTitle")
+                .sort({
+                    date: -1,
+                    createdAt: -1,
+                })
+                .skip(skip)
+                .limit(limit),
+
+            Interview.countDocuments(filter),
+        ]);
 
         return res.status(200).json({
             success: true,
             interviews,
+            pagination: {
+                page,
+                limit,
+                totalInterviews,
+                totalPages: Math.ceil(
+                    totalInterviews / limit
+                ),
+            },
         });
     } catch (error) {
         console.error("Get my interviews error:", error);
