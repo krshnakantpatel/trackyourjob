@@ -3,7 +3,6 @@ import {
     createJob,
     getJobs,
     getJobById,
-    addInterview,
     updateJobStatus,
     updateJob,
     deleteJob,
@@ -17,8 +16,6 @@ router.post("/", authMiddleware, createJob);
 router.get("/", authMiddleware, getJobs);
 
 router.get("/:id", authMiddleware, getJobById);
-
-router.post("/:id/interviews", authMiddleware, addInterview);
 
 router.put("/:id", authMiddleware, updateJobStatus);
 
