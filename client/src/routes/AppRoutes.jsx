@@ -11,6 +11,9 @@ import PublicProtected from "./protected/PublicProtected";
 import MainProtected from "./protected/MainProtected";
 import AddJob from "../pages/AddJob";
 import Applications from "../pages/Applications";
+import JobDetails from "../pages/JobDetails";
+import InterNotes from "../pages/InterviewNotes";
+import InterviewExperienceCard from "../pages/InterviewExperienceCard";
 
 const AppRoutes = () => {
 
