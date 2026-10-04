@@ -169,10 +169,9 @@ export const updateJobStatus = async (req, res) => {
     }
 }
 
-export const addInterview = async (req, res) => {
+export const deleteJob = async (req, res) => {
     try {
-        // 1. Find the job and verify that it belongs to the logged-in user
-        const job = await Job.findOne({
+        const job = await Job.findOneAndDelete({
             _id: req.params.id,
             user: req.user._id,
         });
@@ -184,31 +183,17 @@ export const addInterview = async (req, res) => {
             });
         }
 
-        // 2. Create the interview as a separate document
-        const interview = await Interview.create({
-            ...req.body,
-            job: job._id,
-            user: req.user._id,
-        });
-
-        // 3. Store only the interview ID in the Job document
-        job.interviews.push(interview._id);
-
-        await job.save();
-
-        res.status(201).json({
+        res.status(200).json({
             success: true,
-            message: "Interview added successfully",
-            interview,
-            job,
+            message: "Job deleted successfully",
         });
-
     } catch (error) {
-        console.error("Add interview error:", error);
+        console.error("Delete job error:", error);
 
         res.status(500).json({
             success: false,
-            message: "Failed to add interview",
+            message: "Failed to delete job",
         });
     }
+
 };
