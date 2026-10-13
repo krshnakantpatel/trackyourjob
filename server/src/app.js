@@ -8,12 +8,15 @@ import interviewRoutes from "./routes/interviewRoutes.js";
 const app = express();
 
 
+
 app.use(cors({
     origin: [
-        "https://trackyourjob.me",
-        "https://www.trackyourjob.me"
+        "https://www.trackyourjob.me",
+        "https://trackyourjob.me"
     ],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: [
         "RateLimit-Limit",
         "RateLimit-Remaining",
@@ -24,6 +27,7 @@ app.use(cors({
         "X-RateLimit-Reset"
     ]
 }));
+
 
 app.use(express.json());
 
