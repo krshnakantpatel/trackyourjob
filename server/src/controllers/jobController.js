@@ -24,7 +24,6 @@ export const createJob = async (req, res) => {
     }
 };
 
-
 export const getJobs = async (req, res) => {
     try {
         const page = Math.max(Number(req.query.page) || 1, 1);

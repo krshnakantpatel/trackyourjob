@@ -5,7 +5,7 @@ import {
     getJobById,
     updateJobStatus,
     updateJob,
-    deleteJob,
+    deleteJob
 } from "../controllers/jobController.js";
 import {authMiddleware} from "../middlewares/authMiddleware.js";
 
